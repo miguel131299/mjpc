@@ -1,0 +1,153 @@
+<mujoco>
+
+    <default>
+
+        <default class="motor">
+
+            <default class="abduction_motor">
+                <joint limited="true" range="-20 30" type="hinge" 
+                    pos="0 0 0" axis="1 0 0" stiffness="0" damping="0.1" armature="0.0065"
+                    group="1" />
+            </default>
+
+            <default class="hip_motor">
+                <joint limited="true" range="-40 40" type="hinge" 
+                    pos="0 0 0" axis="0 1 0" stiffness="0" damping="0.1" armature="0.0065"
+                    group="1" />
+            </default>
+
+            <default class="knee_motor">
+                <joint limited="true" range="-30 30" type="hinge" 
+                    pos="0 0 0" axis="0 1 0" stiffness="0" damping="0.1" armature="0.0065"
+                    group="1" />
+            </default>
+
+            <default class="AbductionGeom">
+                <geom type="capsule" mass="0.001" size="0.01" rgba="0.0 0.5 0.0 1"
+                    group="1"/>
+            </default>
+
+            <default class="UpLeg">
+                <geom type="capsule" mass="0.05" size="0.01" fromto="0 0 0 -0.14 0 0" rgba="0.0 0.5 0.0 1"
+                    group="1" />
+            </default>
+
+            <default class="DownLeg">
+                <geom type="capsule" mass="0.05" size="0.01" fromto="0 0 0 0.14 0 0" rgba="0.0 0.5 0.0 1"
+                    group="1" />
+            </default>
+
+            <default class="Foot">
+                <geom type="sphere" mass="0.001" size="0.02" rgba="1.0 1.0 0.1 1" friction="2 0.02 0.01"
+                    group="1"/>
+            </default>
+        </default>
+    </default>
+
+    <worldbody>
+        <body name="main_body" pos="0 0 0.2" euler="0 0 0" >
+            <joint name="rail" type="free"/>
+    
+            <geom name="box" group="1" mass="3" type="box" size="0.2 0.045 0.025" rgba="0.4 0.7 1.0 1"/>
+            <site name="imu" size="0.02" pos="0 0 0"/>
+            <site name="head" pos=".22 0 0" size="0.02"/>
+    
+            <body name="FL" pos="0.1505 0.045 0">
+
+                <body name="LegFrame_FL">
+                    <joint name="AbductionMotor_FL" class="abduction_motor"/>
+                    <geom name="Abduction_FL" class="AbductionGeom" fromto="0 0 0 0 0.05 0"/>
+
+                    <body name="UpLegFrame_FL" pos="0 0.05 0" euler="0 -45 0">
+                        <joint name="HipMotor_FL" class="hip_motor" />
+                        <geom name="UpLeg_FL" class="UpLeg"/>
+        
+                        <body name="DownLegFrame_FL" pos="-0.14 0 0" euler="0 90 0">
+                            <joint name="KneeMotor_FL" class="knee_motor" />
+                            <geom name="DownLeg_FL" class="DownLeg"/>
+        
+                            <body name="FootFrame_FL" pos="0.14 0 0">
+                                <geom name="Foot_FL" class="Foot"/>
+                                <site name="Foot_FL_contact" size="0.021"/>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+                
+    
+            </body>
+    
+            <body name="FR" pos="0.1505 -0.045 0">
+                <body name="LegFrame_FR">
+                    <joint name="AbductionMotor_FR" class="abduction_motor"/>
+                    <geom name="Abduction_FR" class="AbductionGeom" fromto="0 0 0 0 -0.05 0"/>
+
+                    <body name="UpLegFrame_FR" pos="0 -0.05 0" euler="0 -45 0">
+                        <joint name="HipMotor_FR" class="hip_motor" />
+                        <geom name="UpLeg_FR" class="UpLeg"/>
+        
+                        <body name="DownLegFrame_FR" pos="-0.14 0 0" euler="0 90 0">
+                            <joint name="KneeMotor_FR" class="knee_motor"/>
+                            <geom name="DownLeg_FR" class="DownLeg"/>
+        
+                            <body name="FootFrame_FR" pos="0.14 0 0">
+                                <geom name="Foot_FR" class="Foot"/>
+                                <site name="Foot_FR_contact" size="0.021"/>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+    
+            </body>
+    
+            <body name="RL" pos="-0.1505 0.045 0">
+                <body name="LegFrame_RL">
+                    <joint name="AbductionMotor_RL" class="abduction_motor"/>
+                    <geom name="Abduction_RL" class="AbductionGeom" fromto="0 0 0 0 0.05 0"/>
+
+                    <body name="UpLegFrame_RL" pos="0 0.05 0" euler="0 -45 0">
+                        <joint name="HipMotor_RL" class="hip_motor" />
+                        <geom name="UpLeg_RL" class="UpLeg"/>
+        
+                        <body name="DownLegFrame_RL" pos="-0.14 0 0" euler="0 90 0">
+                            <joint name="KneeMotor_RL" class="knee_motor" />
+                            <geom name="DownLeg_RL" class="DownLeg"/>
+        
+                            <body name="FootFrame_RL" pos="0.14 0 0">
+                                <geom name="Foot_RL" class="Foot"/>
+                                <site name="Foot_RL_contact" size="0.021"/>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+    
+            </body>
+    
+            <body name="RR" pos="-0.1505 -0.045 0">
+                <body name="LegFrame_RR">
+                    <joint name="AbductionMotor_RR" class="abduction_motor"/>
+                    <geom name="Abduction_RR" class="AbductionGeom" fromto="0 0 0 0 -0.05 0"/>
+                    
+                    <body name="UpLegFrame_RR" pos="0 -0.05 0" euler="0 -45 0">
+                        <joint name="HipMotor_RR" class="hip_motor" />
+                        <geom name="UpLeg_RR" class="UpLeg"/>
+        
+                        <body name="DownLegFrame_RR" pos="-0.14 0 0" euler="0 90 0">
+                            <joint name="KneeMotor_RR" class="knee_motor" />
+                            <geom name="DownLeg_RR" class="DownLeg"/>
+        
+                            <body name="FootFrame_RR" pos="0.14 0 0">
+                                <geom name="Foot_RR" class="Foot"/>
+                                <site name="Foot_RR_contact" size="0.021"/>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+            
+    
+        </body>
+    
+    </worldbody>
+
+</mujoco>
