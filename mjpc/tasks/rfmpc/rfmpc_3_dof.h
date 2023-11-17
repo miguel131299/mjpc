@@ -76,8 +76,8 @@ class RFMPC_3_DOF : public Task {
       // duty ratio  cadence  amplitude  balance   upright   height   posture     consistency
       // unitless    Hz       meter      unitless  unitless  unitless unitless    unitless
         {1,          1,       0,         0.03,     1,        1,       1,        0.04},        // stand
-        {0.75,       1,       0.015,     0.15,     1,        1,       0.2,        0.1},        // walk
-        {0.45,       2,       0.015,     0.2,      1,        1,       0.2,        0.1},        // trot
+        {0.75,       3,       0.015,     0.15,     1,        1,       0.2,        0.1},        // walk
+        {0.45,       3,       0.015,     0.2,      1,        1,       0.2,        0.1},        // trot
         {0.4,        4,       0.025,     0.03,     0.5,      0.2,     0.2,        0.05},        // canter
         {0.3,        3.5,     0.05,      0.03,     0.2,      0.1,     0.2,        0.02}         // gallop
       };

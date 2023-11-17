@@ -207,11 +207,93 @@ void EstimatorLoop(mj::Simulate& sim) {
   }
 }
 
+double radiansToDegrees(double radians) {
+  return radians * 180.0 / M_PI;
+}
+
+// Function to convert quaternion to Euler angles
+std::array<double, 3> quaternionToEulerAngles(double& q_w, double& q_x, double& q_y, double& q_z) {
+  
+    std::array<double, 3> angles;
+
+    
+    // Calculate yaw (Y)
+    angles[0] = atan2(2 * (q_w * q_z + q_x * q_y), 1 - 2 * (q_y * q_y + q_z * q_z));
+
+    // Calculate pitch (X)
+    angles[1] = asin(2 * (q_w * q_y - q_x * q_z));
+
+    // Calculate roll (Z)
+    angles[2] = atan2(2 * (q_w * q_x + q_y * q_z), 1 - 2 * (q_x * q_x + q_y * q_y));
+
+    // Convert to degrees
+    angles[0] = radiansToDegrees(angles[0]);
+    angles[1] = radiansToDegrees(angles[1]);
+    angles[2] = radiansToDegrees(angles[2]);
+
+    return angles;
+
+}
+
+//****************************
+//This function is called once and is used to get the headers
+void init_save_data(FILE* fid)
+{
+  //write name of the variable here (header)
+   fprintf(fid,"t,");
+   fprintf(fid, "x,y,");
+   fprintf(fid, "yaw,pitch,roll");
+
+
+   //Don't remove the newline
+   fprintf(fid,"\n");
+}
+
+// This function is called at a set frequency, put data here
+void save_data(FILE* fid, const mjModel* m, mjData* d)
+{
+  //data here should correspond to headers in init_save_data()
+  //seperate data by a space %f followed by space
+  fprintf(fid,"%f, ",d->time);
+
+  int head_site_id_ = mj_name2id(m, mjOBJ_SITE, "head");
+  double* head = d->site_xpos + 3 * head_site_id_;
+  fprintf(fid,  "%f,%f,", head[0], head[1]);
+
+  double* orientation = mjpc::SensorByName(m, d, "orientation");
+
+  // double* Foot_FL_sensor = mjpc::SensorByName(m, d, "Foot_FL_sensor");
+  // double* Foot_FR_sensor = mjpc::SensorByName(m, d, "Foot_FR_sensor");
+  // double* Foot_RL_sensor = mjpc::SensorByName(m, d, "Foot_RL_sensor");
+  // double* Foot_RR_sensor = mjpc::SensorByName(m, d, "Foot_RR_sensor");
+
+  // print foot sensors
+  // printf("%f,%f,%f,%f\n", Foot_FL_sensor[0], Foot_FR_sensor[0], Foot_RL_sensor[0], Foot_RR_sensor[0]);
+
+  std::array<double, 3> euler_angles = quaternionToEulerAngles(orientation[0], orientation[1], 
+                                                  orientation[2], orientation[3]);
+
+  fprintf(fid, "%f,%f,%f", euler_angles[0], euler_angles[1], euler_angles[2]);
+
+  //Don't remove the newline
+  fprintf(fid,"\n");
+}
+
+
 // simulate in background thread (while rendering in main thread)
 void PhysicsLoop(mj::Simulate& sim) {
   // cpu-sim synchronization point
   std::chrono::time_point<mj::Simulate::Clock> syncCPU;
   mjtNum syncSim = 0;
+
+  // related to writing data to file
+  char datafile[] = "data.csv";
+  FILE* fid = fopen(datafile, "w");
+  int loop_index = 0;
+  const int data_frequency = 50; //frequency of data saving
+
+  // write headers
+  init_save_data(fid);
 
   // run until asked to exit
   while (!sim.exitrequest.load()) {
@@ -358,6 +440,14 @@ void PhysicsLoop(mj::Simulate& sim) {
               }
             }
           }
+
+          if ( loop_index == data_frequency)
+            {
+              save_data(fid, m, d);
+              loop_index = 0;
+            }
+          loop_index = loop_index + 1;
+
         } else {  // paused
           // apply pose perturbation
           sim.ApplyPosePerturbations(1);  // move mocap and dynamic bodies
@@ -380,6 +470,9 @@ void PhysicsLoop(mj::Simulate& sim) {
       }
     }
   }
+
+  fclose(fid);
+
 }
 }  // namespace
 
