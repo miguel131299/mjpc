@@ -216,7 +216,7 @@ class MULTISPINE : public Task {
 
       // path mode states
       int current_path_stage_ = 0;
-      int num_path_stages_ = 15;
+      int num_path_stages_ = 16;
 
       enum MULTISPINEJointIDs {
         kFrontLimbZHinge = 7,

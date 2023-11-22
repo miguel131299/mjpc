@@ -242,7 +242,8 @@ void init_save_data(FILE* fid)
   //write name of the variable here (header)
    fprintf(fid,"t,");
    fprintf(fid, "x,y,");
-   fprintf(fid, "yaw,pitch,roll");
+   fprintf(fid, "yaw,pitch,roll,");
+   fprintf(fid, "fl_contact, fr_contact, rl_contact, rr_contact");
 
 
    //Don't remove the newline
@@ -262,18 +263,18 @@ void save_data(FILE* fid, const mjModel* m, mjData* d)
 
   double* orientation = mjpc::SensorByName(m, d, "orientation");
 
-  // double* Foot_FL_sensor = mjpc::SensorByName(m, d, "Foot_FL_sensor");
-  // double* Foot_FR_sensor = mjpc::SensorByName(m, d, "Foot_FR_sensor");
-  // double* Foot_RL_sensor = mjpc::SensorByName(m, d, "Foot_RL_sensor");
-  // double* Foot_RR_sensor = mjpc::SensorByName(m, d, "Foot_RR_sensor");
+  double* Foot_FL_sensor = mjpc::SensorByName(m, d, "Foot_FL_sensor");
+  double* Foot_FR_sensor = mjpc::SensorByName(m, d, "Foot_FR_sensor");
+  double* Foot_RL_sensor = mjpc::SensorByName(m, d, "Foot_RL_sensor");
+  double* Foot_RR_sensor = mjpc::SensorByName(m, d, "Foot_RR_sensor");
 
   // print foot sensors
-  // printf("%f,%f,%f,%f\n", Foot_FL_sensor[0], Foot_FR_sensor[0], Foot_RL_sensor[0], Foot_RR_sensor[0]);
 
   std::array<double, 3> euler_angles = quaternionToEulerAngles(orientation[0], orientation[1], 
                                                   orientation[2], orientation[3]);
 
-  fprintf(fid, "%f,%f,%f", euler_angles[0], euler_angles[1], euler_angles[2]);
+  fprintf(fid, "%f,%f,%f,", euler_angles[0], euler_angles[1], euler_angles[2]);
+  fprintf(fid,"%f,%f,%f,%f", Foot_FL_sensor[0], Foot_FR_sensor[0], Foot_RL_sensor[0], Foot_RR_sensor[0]);
 
   //Don't remove the newline
   fprintf(fid,"\n");

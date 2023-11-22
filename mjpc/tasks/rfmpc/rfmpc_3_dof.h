@@ -173,7 +173,7 @@ class RFMPC_3_DOF : public Task {
 
       // path mode states
       int current_path_stage_ = 0;
-      int num_path_stages_ = 15;
+      int num_path_stages_ = 16;
 
       //  ============  constants, computed in Reset()  ============
       int torso_body_id_        = -1;
