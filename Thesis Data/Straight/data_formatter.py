@@ -1,53 +1,78 @@
 import pandas as pd
 
-# create x-axis columns (gait frequency)
-data = {"gait_frequencies": [1, 2, 3], "gait_frequencies_gallop": [2, 3, 4]}
-
-# create dataframe with both x-axis columns
-df = pd.DataFrame(data)
-
 gait_names = ["walk", "trot", "gallop"]
 
-for gait in gait_names:
-    # read the data from the files
+def format_straight_speed_data(): 
+  # create x-axis columns (gait frequency)
+  data = {"gait_frequencies": [1, 2, 3], "gait_frequencies_gallop": [2, 3, 4]}
 
+  # create dataframe with both x-axis columns
+  df = pd.DataFrame(data)
+
+  for gait in gait_names:
+      # read the data from the files
+
+      for spine in ["s", "ns"]:
+          
+        frequencies = []
+        speeds = []
+        
+        if gait == "gallop":
+            frequencies = [2, 3, 4]
+        else:
+            frequencies = [1, 2, 3]
+            
+        for frequency in frequencies:
+
+          total_time = 0
+
+          for test_number in range(1, 4):
+          
+            # Load the CSV file into a DataFrame
+            file_path = "/home/miguel/Documents/mujoco_mpc/Thesis Data/Straight/{gait}_{frequency}hz_{spine}_{test_number}.csv".format(gait=gait, frequency=frequency, spine=spine, test_number=test_number)
+
+            df_single = pd.read_csv(file_path)
+
+            total_time += df_single["t"].iloc[-1]
+
+          # Calculate the average speed
+          total_distance = 15
+          speed = total_distance / total_time
+
+          # Append the speed to the list
+          speeds.append(speed)
+
+          # Create a new column in the DataFrame for the y-axis data
+        df["{gait}_{spine}".format(gait=gait, spine=spine)] = speeds
+
+  # Save the DataFrame to a CSV file
+  df.to_csv("speed_data.csv", index=False)
+
+def format_straight_angle_data():
+   
+  df = pd.DataFrame()
+   
+  for gait in gait_names:
     for spine in ["s", "ns"]:
-        
-      frequencies = []
-      speeds = []
-      
-      if gait == "gallop":
-          frequencies = [2, 3, 4]
-      else:
-          frequencies = [1, 2, 3]
-          
-      for frequency in frequencies:
+      file_path = "/home/miguel/Documents/mujoco_mpc/Thesis Data/Straight/data/angles/{gait}_{spine}.csv".format(gait=gait, spine=spine)
 
-        total_time = 0
+      df_single = pd.read_csv(file_path)
 
-        for test_number in range(1, 4):
-        
-          # Load the CSV file into a DataFrame
-          file_path = "/home/miguel/Documents/Thesis Data/Straight/{gait}_{frequency}hz_{spine}_{test_number}.csv".format(gait=gait, frequency=frequency, spine=spine, test_number=test_number)
+    
+      # Normalize the values in 't' between 0 and 2
+      min_value = df_single["t"].min()
+      max_value = df_single["t"].max()
 
-          df_single = pd.read_csv(file_path)
+      df_single["t"] = (df_single["t"] - min_value) / (max_value - min_value) * 2
 
-          total_time += df_single["t"].iloc[-1]
+      # Append the data to the DataFrame
 
-        # Calculate the average speed
-        total_distance = 15
-        speed = total_distance / total_time
+      df["{gait}_{spine}_t".format(gait=gait, spine=spine)] = df_single["t"]
 
-        # Append the speed to the list
-        speeds.append(speed)
+      for angle in ["yaw", "pitch", "roll"]:
+        df["{gait}_{spine}_{angle}".format(gait=gait, spine=spine, angle=angle)] = df_single[angle]
 
-        # Create a new column in the DataFrame for the y-axis data
-      df["{gait}_{spine}".format(gait=gait, spine=spine)] = speeds
+  df.to_csv("angle_data.csv", index=False)
 
-# Save the DataFrame to a CSV file
-df.to_csv("speed_data.csv", index=False)
-
-          
-
-
-
+format_straight_angle_data()
+   
