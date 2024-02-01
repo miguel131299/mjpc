@@ -48,5 +48,31 @@ def format_balance_data():
   average_ns.to_csv("balance_ns.csv", index=False)
 
 
-format_balance_data()
+def analyze_balance_data():
+    
+    data_df = pd.DataFrame({
+    "spine": [],
+    "angle": [],
+    "mean": [],
+    "std": [],
+    "min": [],
+    "max": []
+  })
+    
+    for spine in ["s", "ns"]:
+        file_path = "balance_" + spine + ".csv"
+        df = pd.read_csv(file_path)
+        for angle in ["yaw", "pitch", "roll"]:
+            data_df = data_df._append({
+                "spine": spine,
+                "angle": angle,
+                "mean": df[angle].mean(),
+                "std": df[angle].std(),
+                "min": df[angle].min(),
+                "max": df[angle].max()
+            }, ignore_index=True)
 
+    data_df.to_csv("balance_data.csv", index=False)
+
+
+analyze_balance_data()

@@ -72,7 +72,38 @@ def format_straight_angle_data():
       for angle in ["yaw", "pitch", "roll"]:
         df["{gait}_{spine}_{angle}".format(gait=gait, spine=spine, angle=angle)] = df_single[angle]
 
-  df.to_csv("angle_data.csv", index=False)
+  ## Save average (mean) and standard deviation of the angles in CSV
+        
+  data_df = pd.DataFrame({
+    "gait": [],
+    "spine": [],
+    "angle": [],
+    "mean": [],
+    "std": [],
+    "min": [],
+    "max": []
+  })
+  
+  for gait in gait_names:
+    for spine in ["s", "ns"]:
+      for angle in ["yaw", "pitch", "roll"]:
+        data_df = data_df._append({
+          "gait": gait,
+          "spine": spine,
+          "angle": angle,
+          "mean": df["{gait}_{spine}_{angle}".format(gait=gait, spine=spine, angle=angle)].mean(),
+          "std": df["{gait}_{spine}_{angle}".format(gait=gait, spine=spine, angle=angle)].std(),
+          "min": df["{gait}_{spine}_{angle}".format(gait=gait, spine=spine, angle=angle)].min(),
+          "max": df["{gait}_{spine}_{angle}".format(gait=gait, spine=spine, angle=angle)].max()
+        }, ignore_index=True)
+  
+
+  ## Save all the data in CSV
+  
+  data_df.to_csv("angle_stats.csv", index=False)
+      
+
+  # df.to_csv("angle_data.csv", index=False)
 
 format_straight_angle_data()
    

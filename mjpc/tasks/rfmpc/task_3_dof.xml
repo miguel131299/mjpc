@@ -19,7 +19,7 @@
         <numeric name="sampling_exploration" data="0.04" />
         <numeric name="gradient_spline_points" data="5" />
     
-        <numeric name="residual_select_Gait" data="2"/>
+        <numeric name="residual_select_Gait" data="1"/>
         <text name="residual_list_Gait" data="Stand|Walk|Trot|Canter|Gallop"/>
         <numeric name="residual_select_Gait switch" data="0"/>
         <text name="residual_list_Gait switch" data="Manual|Automatic"/>
@@ -61,7 +61,7 @@
       <!-- <geom name="ramp-15" pos="3.5 0 0.155" type="box" size="2.5 1 .5" euler="0 -15 0" rgba="0.6 0 0.6 1"/>
       <geom name="platform-15" pos="10.78 0 0.78" type="box" size="5 1 .5" euler="0 0 0" rgba="0.6 0 0.6 1"/> -->
 
-      <body name="circuit" childclass="circuit">
+      <!-- <body name="circuit" childclass="circuit">
 
         <geom type="box" size="2 0.1 0.3" pos="3 1 0"/>
         <geom type="box" size="2 0.1 0.3" pos="3 -1 0"/>
@@ -92,7 +92,7 @@
 
         <geom type="box" size="3 0.1 0.3" pos="4 -2 0"/>
         <geom type="box" size="3 0.1 0.3" pos="4 -4 0"/>
-      </body>
+      </body> -->
 
       
     </worldbody>
@@ -150,7 +150,7 @@
         <key mpos="1 0 0.25" mquat="1 0 0 0" />
 
         <!-- circuit -->
-        <key mpos="5 0 0.25" mquat="1 0 0 0" />
+        <!-- <key mpos="5 0 0.25" mquat="1 0 0 0" />
         <key mpos="5.5 0.5 0.25" mquat="0.923879532511287 0 0 0.38268343236509" />
         <key mpos="6 1 0.25" mquat="0.707106781186548 0 0 0.707106781186547" />
         <key mpos="6 3 0.25" mquat="0.707106781186548 0 0 0.707106781186547" />
@@ -164,7 +164,10 @@
         <key mpos="11 -3 1.25" mquat="0 0 0 1" />
         <key mpos="7 -3 0.25" mquat="0 0 0 1" />
         <key mpos="1 -3 0.25" mquat="0 0 0 1" />
-        <key mpos="0 -3 0.25" mquat="0 0 0 1" />
+        <key mpos="0 -3 0.25" mquat="0 0 0 1" /> -->
+
+        <!-- turn 0.0m -->
+        <key mpos="0.50 -5.00 0.25" mquat="0.707106781186548 0 0 -0.707106781186547" />
 
 
         <!-- turn 0.5 m -->
